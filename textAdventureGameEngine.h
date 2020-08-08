@@ -17,6 +17,10 @@ namespace tag {
             this->description = description;
         }
 
+        std::map<std::string, Room *> getRooms() {
+            return rooms;
+        }
+
         void linkRoom(Room *room, std::string branchDirection, std::string rootDirection) {
             this->rooms[branchDirection] = room;
             room->rooms[rootDirection] = this;
@@ -40,14 +44,24 @@ namespace tag {
         Room rooms[100];
         int vlength = 0;
         std::map<std::string, std::string> dictionary;
+        Room *playerRoom;
 
     public:
         Engine() {
             dictionary = fr::loadDictionaryFromFile("dictionaryOpposite.txt");
         }
 
+        Room * getPlayerRoom() {
+            return playerRoom;
+        }
+
+        void setPlayerRoom(Room *room) {
+            playerRoom = room;
+        }
+
         void setStartRoom(const char *startRoomDescription) {
             startRoom = Room(startRoomDescription);
+            playerRoom = &startRoom;
         }
 
         Room * getStartRoom() {
