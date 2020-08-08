@@ -10,7 +10,6 @@ namespace tag {
     class Room {
     private:
         const char *description;
-        int descriptionLength;
         std::map<std::string, Room *> rooms;
 
     public:
@@ -32,10 +31,6 @@ namespace tag {
             for(std::pair<std::string, Room *> iter : this->rooms) {
                 std::cout << iter.first << " there is " << iter.second->getDescription() << std::endl;
             }
-            // if(hasRoom[NORTH]) { std::cout << "To the north there is " << this->rooms[NORTH]->getDescription() << std::endl; }
-            // if(hasRoom[EAST])  { std::cout << "To the east there is "  <<  this->rooms[EAST]->getDescription() << std::endl; }
-            // if(hasRoom[SOUTH]) { std::cout << "To the south there is " << this->rooms[SOUTH]->getDescription() << std::endl; }
-            // if(hasRoom[WEST])  { std::cout << "To the west there is "  <<  this->rooms[WEST]->getDescription() << std::endl; }
         }
     };
 
