@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <find-replace/find-replace.h>
 
 namespace tag {
     class Room {
@@ -43,9 +44,12 @@ namespace tag {
         Room startRoom;
         Room rooms[100];
         int vlength = 0;
+        std::map<std::string, std::string> dictionary;
 
     public:
-        Engine() {}
+        Engine() {
+            dictionary = fr::loadDictionaryFromFile("dictionaryOpposite.txt");
+        }
 
         void setStartRoom(const char *startRoomDescription) {
             startRoom = Room(startRoomDescription);
@@ -61,7 +65,10 @@ namespace tag {
             return &rooms[vlength-1];
         }
 
-        void linkRooms(Room *rootRoom, Room *branchRoom, std::string branchDirection, std::string rootDirection) {
+        void linkRooms(Room *rootRoom, Room *branchRoom, std::string branchDirection, std::string rootDirection="") {
+            if(rootDirection == "") {
+                rootDirection = fr::translate(branchDirection, dictionary, true);
+            }
             rootRoom->linkRoom(branchRoom, branchDirection, rootDirection);
         }
 
