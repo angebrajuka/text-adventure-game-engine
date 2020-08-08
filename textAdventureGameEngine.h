@@ -3,31 +3,23 @@
 
 #include <iostream>
 #include <string>
+#include <map>
 
 namespace tag {
-    enum Direction {
-        NORTH=0, EAST=1, SOUTH=2, WEST=3
-    };
-
     class Room {
     private:
         const char *description;
         int descriptionLength;
-        Room *rooms[4];
-        bool hasRoom[4] = {false};
+        std::map<std::string, Room *> rooms;
 
     public:
-        Room(const char *description="", int descriptionLength=0) {
+        Room(const char *description="") {
             this->description = description;
-            this->descriptionLength = descriptionLength;
         }
 
-        void linkRoom(Room *room, Direction branchDirection) {
+        void linkRoom(Room *room, std::string branchDirection, std::string rootDirection) {
             this->rooms[branchDirection] = room;
-            int rootDirection = branchDirection + (((branchDirection) > 1) ? -2 : 2);
             room->rooms[rootDirection] = this;
-            this->hasRoom[branchDirection] = true;
-            room->hasRoom[rootDirection] = true;
         }
 
         const char * getDescription() {
@@ -36,10 +28,13 @@ namespace tag {
 
         void printDescriptionFull() { // prints the full description with descriptions of rooms to north, east, south, and west
             std::cout << "You are in " << this->getDescription() << std::endl;
-            if(hasRoom[NORTH]) { std::cout << "To the north there is " << this->rooms[NORTH]->getDescription() << std::endl; }
-            if(hasRoom[EAST])  { std::cout << "To the east there is "  <<  this->rooms[EAST]->getDescription() << std::endl; }
-            if(hasRoom[SOUTH]) { std::cout << "To the south there is " << this->rooms[SOUTH]->getDescription() << std::endl; }
-            if(hasRoom[WEST])  { std::cout << "To the west there is "  <<  this->rooms[WEST]->getDescription() << std::endl; }
+            for(std::pair<std::string, Room *> iter : this->rooms) {
+                std::cout << iter.first << " there is " << iter.second->getDescription() << std::endl;
+            }
+            // if(hasRoom[NORTH]) { std::cout << "To the north there is " << this->rooms[NORTH]->getDescription() << std::endl; }
+            // if(hasRoom[EAST])  { std::cout << "To the east there is "  <<  this->rooms[EAST]->getDescription() << std::endl; }
+            // if(hasRoom[SOUTH]) { std::cout << "To the south there is " << this->rooms[SOUTH]->getDescription() << std::endl; }
+            // if(hasRoom[WEST])  { std::cout << "To the west there is "  <<  this->rooms[WEST]->getDescription() << std::endl; }
         }
     };
 
@@ -52,22 +47,22 @@ namespace tag {
     public:
         Engine() {}
 
-        void setStartRoom(const char *startRoomDescription, int startRoomDescriptionLength=0) {
-            startRoom = Room(startRoomDescription, startRoomDescriptionLength);
+        void setStartRoom(const char *startRoomDescription) {
+            startRoom = Room(startRoomDescription);
         }
 
         Room * getStartRoom() {
             return &startRoom;
         }
 
-        Room * addRoom(const char *description, int descriptionLength=0) {
-            rooms[vlength] = Room(description, descriptionLength);
+        Room * addRoom(const char *description) {
+            rooms[vlength] = Room(description);
             vlength ++;
             return &rooms[vlength-1];
         }
 
-        void linkRooms(Room *rootRoom, Room *branchRoom, Direction branchDirection) {
-            rootRoom->linkRoom(branchRoom, branchDirection);
+        void linkRooms(Room *rootRoom, Room *branchRoom, std::string branchDirection, std::string rootDirection) {
+            rootRoom->linkRoom(branchRoom, branchDirection, rootDirection);
         }
 
         std::string getInput() {
