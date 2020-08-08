@@ -1,0 +1,8 @@
+north_ south
+south_ north
+east_ west
+west_ east
+up_ down
+down_ up
+in_ out
+out_ in
